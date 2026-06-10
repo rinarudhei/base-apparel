@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Element exposing (Element, column, el, rgb255, text)
+import Element exposing (Element, column, el, px, rgb255, text)
 import Element.Font as Font
 import Element.Region as Region exposing (heading)
 import Html exposing (Html)
@@ -58,6 +58,60 @@ josefin =
         [ Font.typeface "Josefin Sans"
         , Font.sansSerif
         ]
+
+
+
+-- SPACING
+
+
+spacing0 : Element.Length
+spacing0 =
+    px 0
+
+
+spacing100 : Element.Length
+spacing100 =
+    px 8
+
+
+spacing200 : Element.Length
+spacing200 =
+    px 16
+
+
+spacing300 : Element.Length
+spacing300 =
+    px 24
+
+
+spacing400 : Element.Length
+spacing400 =
+    px 32
+
+
+spacing500 : Element.Length
+spacing500 =
+    px 40
+
+
+spacing800 : Element.Length
+spacing800 =
+    px 64
+
+
+spacing1000 : Element.Length
+spacing1000 =
+    px 80
+
+
+spacing1100 : Element.Length
+spacing1100 =
+    px 88
+
+
+spacing1700 : Element.Length
+spacing1700 =
+    px 136
 
 
 
