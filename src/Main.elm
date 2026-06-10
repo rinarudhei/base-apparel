@@ -1,14 +1,16 @@
 module Main exposing (..)
 
 import Browser
-import Element exposing (Element, rgb255)
-import Element.Background
-import Html exposing (Html, div, h1, img, text)
+import Element exposing (Element, column, el, rgb255, text)
+import Element.Font as Font
+import Element.Region as Region exposing (heading)
+import Html exposing (Html)
 import Html.Attributes exposing (src)
 
 
 
 ---- DESIGN SYSTEM ----
+-- COLORS
 
 
 white : Element.Color
@@ -47,6 +49,18 @@ gradient3 =
 
 
 
+-- TYPHOGRAPHY
+
+
+josefin : Element.Attribute msg
+josefin =
+    Font.family
+        [ Font.typeface "Josefin Sans"
+        , Font.sansSerif
+        ]
+
+
+
 ---- MODEL ----
 
 
@@ -78,10 +92,12 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        ]
+    Element.layout [ josefin, Font.semiBold ] (column [] [ myTitle ])
+
+
+myTitle : Element.Element msg
+myTitle =
+    el [ Region.heading 1 ] (text "HELLO BASE APPAREL")
 
 
 
