@@ -1,9 +1,10 @@
 module Main exposing (..)
 
 import Browser
-import Element exposing (Element, column, el, px, rgb255, text)
+import Browser.Events
+import Element exposing (Device, DeviceClass(..), Orientation(..), classifyDevice, column, el, px, rgb255, text)
 import Element.Font as Font
-import Element.Region as Region exposing (heading)
+import Element.Region as Region
 import Html exposing (Html)
 import Html.Attributes exposing (src)
 
@@ -118,13 +119,36 @@ spacing1700 =
 ---- MODEL ----
 
 
+type alias Flags =
+    { width : Int
+    , height : Int
+    }
+
+
 type alias Model =
-    {}
+    { device : Device
+    }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( {}, Cmd.none )
+deviceToString : Device -> String
+deviceToString device =
+    case device.class of
+        Phone ->
+            "Phone"
+
+        Tablet ->
+            "Tablet"
+
+        Desktop ->
+            "Desktop"
+
+        BigDesktop ->
+            "Big Desktop"
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { device = classifyDevice { width = flags.width, height = flags.height } }, Cmd.none )
 
 
 
@@ -132,12 +156,18 @@ init =
 
 
 type Msg
-    = NoOp
+    = WindowResized Int Int
+    | Noop
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        WindowResized w h ->
+            ( { model | device = classifyDevice { height = h, width = w } }, Cmd.none )
+
+        Noop ->
+            ( model, Cmd.none )
 
 
 
@@ -146,23 +176,32 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Element.layout [ josefin, Font.semiBold ] (column [] [ myTitle ])
+    Element.layout [ josefin, Font.semiBold ] (column [] [ myTitle model ])
 
 
-myTitle : Element.Element msg
-myTitle =
-    el [ Region.heading 1 ] (text "HELLO BASE APPAREL")
+myTitle : Model -> Element.Element msg
+myTitle model =
+    el [ Region.heading 1 ] (text (deviceToString model.device))
+
+
+
+---- SUBSCRIPTIONS ----
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Browser.Events.onResize (\w h -> WindowResized w h)
 
 
 
 ---- PROGRAM ----
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element
         { view = view
-        , init = \_ -> init
+        , init = \flags -> init flags
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
