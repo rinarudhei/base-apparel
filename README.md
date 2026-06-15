@@ -33,8 +33,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [Github](https://github.com/rinarudhei/base-apparel)
+- Live Site URL: [Live](https://rinarudhei.github.io/base-apparel/)
 
 ## My process
 
@@ -45,7 +45,7 @@ Users should be able to:
 
 ### What I learned
 
-- Switching mental model from css to elm-ui
+- switching mental model from css to elm-ui. It was more strict and less flexibility/fluidity compared to vanilla CSS, but I really enjoyed and appreciated it so much. Definitely will try it again on my next project.
 - elm-ui Input.text (v1.1.8) is using opacity (alpha) to hide the placeholder onFocus. Therefore, if we add style to set the placeholder's opacity (example: alpha 0.5), the placeholder will not hidden when we typed on the text input. Workaround -> Use rgba for the text color to set placeholder text opacity.
 
 ### AI Collaboration

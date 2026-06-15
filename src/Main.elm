@@ -22,6 +22,7 @@ import Element
         , image
         , inFront
         , maximum
+        , moveLeft
         , moveRight
         , moveUp
         , paddingEach
@@ -331,6 +332,7 @@ emailInput model =
             column [ spacing 8, width fill ]
                 [ el
                     [ inFront (submitButton model)
+                    , inFront (errorIcon model)
                     , width fill
                     , height (px 48)
                     , Border.color pink
@@ -346,6 +348,7 @@ emailInput model =
             column [ spacing 8, width fill ]
                 [ el
                     [ inFront (submitButton model)
+                    , inFront (errorIcon model)
                     , width fill
                     , height (px 56)
                     , Border.color pink
@@ -425,6 +428,7 @@ submitButton model =
          , Border.rounded 28
          , moveUp 1
          , moveRight 1
+         , Border.shadow { offset = ( 0, 15 ), blur = 20, color = rgba255 198 110 110 0.24, size = 1 }
          ]
             ++ submitButtonResponsiveStyle model.device
         )
@@ -439,6 +443,35 @@ submitButton model =
                 ]
         , onPress = Nothing
         }
+
+
+errorIconResponsiveStyle : Device -> List (Element.Attribute msg)
+errorIconResponsiveStyle device =
+    case device.class of
+        Phone ->
+            [ moveLeft 70 ]
+
+        _ ->
+            [ moveLeft 116 ]
+
+
+errorIcon : Model -> Element.Element msg
+errorIcon model =
+    case model.emailError of
+        Nothing ->
+            Element.none
+
+        _ ->
+            column ([ alignRight, centerY ] ++ errorIconResponsiveStyle model.device)
+                [ el
+                    [ width (px 24)
+                    , height (px 24)
+                    ]
+                    (image
+                        [ width fill, height fill ]
+                        { description = "input error icon", src = "images/icon-error.svg" }
+                    )
+                ]
 
 
 emailErrorText : Maybe String -> Element.Element msg
