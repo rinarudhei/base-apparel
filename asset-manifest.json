@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.d6d9f280.chunk.css",
-  "main.js": "/static/js/main.20ff90eb.chunk.js",
-  "main.js.map": "/static/js/main.20ff90eb.chunk.js.map",
+  "main.js": "/static/js/main.d231589f.chunk.js",
+  "main.js.map": "/static/js/main.d231589f.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.1b922744.js",
   "runtime~main.js.map": "/static/js/runtime~main.1b922744.js.map",
   "vendors~main.js": "/static/js/vendors~main.ded87515.chunk.js",
@@ -22,6 +22,6 @@
   "images/screenshot2.png": "/images/screenshot2.png",
   "index.html": "/index.html",
   "manifest.json": "/manifest.json",
-  "precache-manifest.d10e33b9bb3a09c1aec5317eca30019c.js": "/precache-manifest.d10e33b9bb3a09c1aec5317eca30019c.js",
+  "precache-manifest.437aadcfb7e3865ea2b52bb027df671d.js": "/precache-manifest.437aadcfb7e3865ea2b52bb027df671d.js",
   "static/media/main.css": "/static/media/josefin-sans-v34-latin-regular.237687e1.woff2"
 }
