@@ -46,7 +46,7 @@ import Element.Font as Font exposing (center)
 import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Attribute, Html)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (pattern, style)
 import Platform.Cmd as Cmd
 import Regex
 
@@ -249,30 +249,31 @@ layoutSelector device =
             LayoutBigScreen
 
 
+emailRegex : Regex.Regex
+emailRegex =
+    case Regex.fromString "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" of
+        Just regex ->
+            regex
+
+        Nothing ->
+            Regex.never
+
+
 validateEmail : String -> Bool
-validateEmail email =
-    let
-        pattern =
-            Maybe.withDefault Regex.never <|
-                Regex.fromString "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-    in
-    Regex.contains pattern email
+validateEmail newEmail =
+    Regex.contains emailRegex newEmail
 
 
-deviceToString : Device -> String
-deviceToString device =
-    case device.class of
-        Phone ->
-            "Phone"
+validateEmailWithError : String -> Maybe String
+validateEmailWithError newEmail =
+    if newEmail == "" then
+        Just emailConfig.requiredMessage
 
-        Tablet ->
-            "Tablet"
+    else if not (validateEmail newEmail) then
+        Just emailConfig.invalidMessage
 
-        Desktop ->
-            "Desktop"
-
-        BigDesktop ->
-            "Big Desktop"
+    else
+        Nothing
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -325,40 +326,33 @@ update msg model =
 ---- VIEW ----
 
 
-emailInput : Model -> Element.Element Msg
-emailInput model =
-    case model.device.class of
+emailInputResponsiveHeight : Device -> Element.Attribute msg
+emailInputResponsiveHeight device =
+    case device.class of
         Phone ->
-            column [ spacing 8, width fill ]
-                [ el
-                    [ inFront (submitButton model)
-                    , inFront (errorIcon model)
-                    , width fill
-                    , height (px 48)
-                    , Border.color pink
-                    , Border.rounded 28
-                    , Border.width 1
-                    , centerY
-                    ]
-                    (textInput model)
-                , emailErrorText model.emailError
-                ]
+            height (px 48)
 
         _ ->
-            column [ spacing 8, width fill ]
-                [ el
-                    [ inFront (submitButton model)
-                    , inFront (errorIcon model)
-                    , width fill
-                    , height (px 56)
-                    , Border.color pink
-                    , Border.rounded 28
-                    , Border.width 1
-                    , centerY
-                    ]
-                    (textInput model)
-                , emailErrorText model.emailError
-                ]
+            height (px 56)
+
+
+emailInput : Model -> Element.Element Msg
+emailInput model =
+    column [ spacing 8, width fill ]
+        [ el
+            [ inFront (submitButton model)
+            , inFront (errorIcon model)
+            , width fill
+            , emailInputResponsiveHeight model.device
+            , Border.color pink
+            , Border.rounded 28
+            , Border.width 1
+            , centerY
+            , htmlAttribute (Html.Attributes.attribute "aria-describedby" "email-error")
+            ]
+            (textInput model)
+        , emailErrorText model.emailError
+        ]
 
 
 textInputResponsiveStyle : Device -> List (Element.Attribute msg)
@@ -397,7 +391,7 @@ textInput model =
                         (textPreset3
                             ++ [ centerY, Font.color (pinkAlpha 0.5), height fill ]
                         )
-                        (text "Email Address")
+                        (text emailConfig.placeholder)
                     )
             , label = Input.labelHidden "email-input"
             }
@@ -481,7 +475,53 @@ emailErrorText emailError =
             Element.none
 
         Just err ->
-            column [ paddingLeft 26, height (px 28) ] [ el (textPreset5 ++ [ Font.color red, centerY ]) (text err) ]
+            column
+                [ paddingLeft 26
+                , height (px 28)
+                , Element.htmlAttribute (Html.Attributes.attribute "id" "email-error")
+                , Element.htmlAttribute (Html.Attributes.attribute "role" "alert")
+                ]
+                [ el (textPreset5 ++ [ Font.color red, centerY ]) (text err) ]
+
+
+contentColumnResponsiveStyle : Device -> List (Element.Attribute msg)
+contentColumnResponsiveStyle device =
+    case device.class of
+        Phone ->
+            [ height shrink
+            , width (px 312)
+            , centerX
+            , paddingEach { top = 64, bottom = 32, left = 0, right = 0 }
+            ]
+
+        Tablet ->
+            [ height shrink
+            , width (px 445)
+            , centerX
+            , paddingEach { top = 64, bottom = 64, left = 0, right = 0 }
+            ]
+
+        _ ->
+            [ height shrink
+            , width (px 445)
+            , paddingEach { top = 136, bottom = 138, left = 0, right = 0 }
+            ]
+
+
+contentString : { headerFirst : String, headerSecond : String, paragraph : String }
+contentString =
+    { headerFirst = "WE'RE"
+    , headerSecond = "COMING SOON"
+    , paragraph = "Hello fellow shoppers! We're currently building our new fashion store. Add your email below to stay up-to-date with announcements and our launch deals."
+    }
+
+
+emailConfig : { requiredMessage : String, invalidMessage : String, placeholder : String }
+emailConfig =
+    { requiredMessage = "Email is required"
+    , invalidMessage = "Please provide a valid email"
+    , placeholder = "Email Address"
+    }
 
 
 content : Model -> Element.Element Msg
@@ -489,51 +529,40 @@ content model =
     case model.device.class of
         Phone ->
             column
-                [ height shrink
-                , width (px 312)
-                , centerX
-                , paddingEach { top = 64, bottom = 32, left = 0, right = 0 }
-                ]
+                (contentColumnResponsiveStyle model.device)
                 [ column [ Region.heading 1, centerX, center, width fill, paddingEach { top = 0, right = 0, bottom = 16, left = 0 } ]
-                    [ el (textPreset2Light ++ [ Font.color pink, center, centerX, height (px 42) ]) (text "WE'RE")
-                    , paragraph ([ Font.color gray, center ] ++ textPreset2SemiBold) [ text "COMING SOON" ]
+                    [ el (textPreset2Light ++ [ Font.color pink, center, centerX, height (px 42) ]) (text contentString.headerFirst)
+                    , paragraph ([ Font.color gray, center ] ++ textPreset2SemiBold) [ text contentString.headerSecond ]
                     ]
                 , paragraph
                     ([ Font.color pink, center, paddingEach { top = 0, right = 0, bottom = 32, left = 0 } ] ++ textPreset4)
-                    [ text "Hello fellow shoppers! We're currently building our new fashion store. Add your email below to stay up-to-date with announcements and our launch deals." ]
+                    [ text contentString.paragraph ]
                 , emailInput model
                 ]
 
         Tablet ->
             column
-                [ height shrink
-                , width (px 445)
-                , centerX
-                , paddingEach { top = 64, bottom = 64, left = 0, right = 0 }
-                ]
+                (contentColumnResponsiveStyle model.device)
                 [ column [ Region.heading 1, centerX, center, width fill, paddingEach { top = 0, right = 0, bottom = 32, left = 0 } ]
-                    [ el (textPreset1Light ++ [ Font.color pink, center, centerX, height (px 64) ]) (text "WE'RE")
-                    , paragraph ([ Font.color gray, center ] ++ textPreset1SemiBold) [ text "COMING SOON" ]
+                    [ el (textPreset1Light ++ [ Font.color pink, center, centerX, height (px 64) ]) (text contentString.headerFirst)
+                    , paragraph ([ Font.color gray, center ] ++ textPreset1SemiBold) [ text contentString.headerSecond ]
                     ]
                 , paragraph
                     ([ Font.color pink, center, paddingEach { top = 0, right = 0, bottom = 32, left = 0 } ] ++ textPreset3)
-                    [ text "Hello fellow shoppers! We're currently building our new fashion store. Add your email below to stay up-to-date with announcements and our launch deals." ]
+                    [ text contentString.paragraph ]
                 , emailInput model
                 ]
 
         _ ->
             column
-                [ height shrink
-                , width (px 400)
-                , paddingEach { top = 136, bottom = 138, left = 0, right = 0 }
-                ]
+                (contentColumnResponsiveStyle model.device)
                 [ column [ Region.heading 1, centerX, center, width fill, paddingEach { top = 0, right = 0, bottom = 32, left = 0 } ]
-                    [ el (textPreset1Light ++ [ Font.color pink, height (px 64) ]) (text "WE'RE")
-                    , paragraph ([ Font.color gray, Font.alignLeft, height (px 132) ] ++ textPreset1SemiBold) [ text "COMING SOON" ]
+                    [ el (textPreset1Light ++ [ Font.color pink, height (px 64) ]) (text contentString.headerFirst)
+                    , paragraph ([ Font.color gray, Font.alignLeft, height (px 132) ] ++ textPreset1SemiBold) [ text contentString.headerSecond ]
                     ]
                 , paragraph
                     ([ Font.color pink, Font.alignLeft, paddingEach { top = 0, right = 0, bottom = 32, left = 0 } ] ++ textPreset3)
-                    [ text "Hello fellow shoppers! We're currently building our new fashion store. Add your email below to stay up-to-date with announcements and our launch deals." ]
+                    [ text contentString.paragraph ]
                 , emailInput model
                 ]
 
