@@ -1,1 +1,39 @@
-[data-elm-hot=true]{height:inherit}body{font-family:Josefin Sans,sans-serif;margin:0;text-align:center}h1{font-size:30px}img{margin:20px 0;max-width:200px}@font-face{font-display:swap;font-family:Josefin Sans;font-style:normal;font-weight:300;src:url(/static/media/josefin-sans-v34-latin-300.61225cd8.woff2) format("woff2")}@font-face{font-display:swap;font-family:Josefin Sans;font-style:normal;font-weight:400;src:url(/static/media/josefin-sans-v34-latin-regular.237687e1.woff2) format("woff2")}@font-face{font-display:swap;font-family:Josefin Sans;font-style:normal;font-weight:500;src:url(/static/media/josefin-sans-v34-latin-500.c293c0dd.woff2) format("woff2")}
+[data-elm-hot="true"] {
+  height: inherit;
+}
+body {
+  font-family:
+    Josefin Sans,
+    sans-serif;
+  margin: 0;
+  text-align: center;
+}
+h1 {
+  font-size: 30px;
+}
+img {
+  margin: 20px 0;
+  max-width: 200px;
+}
+@font-face {
+  font-display: swap;
+  font-family: Josefin Sans;
+  font-style: normal;
+  font-weight: 300;
+  src: url("../media/josefin-sans-v34-latin-300.61225cd8.woff2") format("woff2");
+}
+@font-face {
+  font-display: swap;
+  font-family: Josefin Sans;
+  font-style: normal;
+  font-weight: 400;
+  src: url("../media/josefin-sans-v34-latin-regular.237687e1.woff2")
+    format("woff2");
+}
+@font-face {
+  font-display: swap;
+  font-family: Josefin Sans;
+  font-style: normal;
+  font-weight: 500;
+  src: url("../media/josefin-sans-v34-latin-500.c293c0dd.woff2") format("woff2");
+}
