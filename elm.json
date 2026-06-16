@@ -10,12 +10,15 @@
             "elm/core": "1.0.4",
             "elm/html": "1.0.0",
             "elm/regex": "1.0.0",
+            "elm-explorations/test": "2.2.1",
             "escherlies/elm-color": "1.1.0",
             "mdgriffith/elm-ui": "1.1.8"
         },
         "indirect": {
+            "elm/bytes": "1.0.8",
             "elm/json": "1.1.2",
             "elm/parser": "1.1.0",
+            "elm/random": "1.0.0",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "elm/virtual-dom": "1.0.2",
@@ -23,11 +26,7 @@
         }
     },
     "test-dependencies": {
-        "direct": {
-            "elm-explorations/test": "1.0.0"
-        },
-        "indirect": {
-            "elm/random": "1.0.0"
-        }
+        "direct": {},
+        "indirect": {}
     }
 }

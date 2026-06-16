@@ -10,7 +10,6 @@ import Element
         , Orientation(..)
         , alignLeft
         , alignRight
-        , alpha
         , centerX
         , centerY
         , classifyDevice
@@ -45,8 +44,8 @@ import Element.Border as Border
 import Element.Font as Font exposing (center)
 import Element.Input as Input
 import Element.Region as Region
-import Html exposing (Attribute, Html)
-import Html.Attributes exposing (pattern, style)
+import Html exposing (Html)
+import Html.Attributes exposing (style)
 import Platform.Cmd as Cmd
 import Regex
 
@@ -306,18 +305,7 @@ update msg model =
             ( { model | device = classifyDevice { height = h, width = w } }, Cmd.none )
 
         UpdateEmail newEmail ->
-            let
-                error =
-                    if newEmail == "" then
-                        Just "Email is required"
-
-                    else if not (validateEmail newEmail) then
-                        Just "Please provide a valid email"
-
-                    else
-                        Nothing
-            in
-            ( { model | email = newEmail, emailError = error }
+            ( { model | email = newEmail, emailError = validateEmailWithError newEmail }
             , Cmd.none
             )
 
