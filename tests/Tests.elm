@@ -6,6 +6,7 @@ import Html exposing (div, img, text)
 import Html.Attributes exposing (src)
 import Main exposing (Model, Msg(..), emailConfig, update, view)
 import Test exposing (..)
+import Test.Html.Event as Event exposing (Event)
 import Test.Html.Query as Query
 import Test.Html.Selector as Selector
 
@@ -97,4 +98,17 @@ testView =
                             |> Query.has [ Selector.tag "img", Selector.attribute (Html.Attributes.alt "input error icon") ]
                     ]
                     (view emailErrorModel |> Query.fromHtml)
+        ]
+
+
+testEvent : Test
+testEvent =
+    describe "events"
+        [ test "UpdateEmail" <|
+            \_ ->
+                view initialModel
+                    |> Query.fromHtml
+                    |> Query.find [ Selector.tag "input" ]
+                    |> Event.simulate (Event.input "myvalidemail@email.com")
+                    |> Event.expect (UpdateEmail "myvalidemail@email.com")
         ]
